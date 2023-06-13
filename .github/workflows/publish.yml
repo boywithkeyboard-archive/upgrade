@@ -18,3 +18,5 @@ jobs:
       
       - name: 'Publish Release'
         uses: 'azurystudio/log@v1'
+        with:
+          style: 'description'
