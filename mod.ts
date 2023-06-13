@@ -1,7 +1,7 @@
 import { parse } from 'https://deno.land/std@0.191.0/flags/mod.ts'
 import { brightBlue, brightGreen, brightRed, gray, strikethrough, underline, white } from 'https://deno.land/std@0.191.0/fmt/colors.ts'
 import { walk } from 'https://deno.land/std@0.191.0/fs/walk.ts'
-import { valid } from 'https://deno.land/std@0.191.0/semver/mod.ts'
+import { difference, prerelease, valid } from 'https://deno.land/std@0.191.0/semver/mod.ts'
 import regex from 'https://esm.sh/url-regex@5.0.0'
 import js_delivr from './registries/cdn.jsdelivr.net.ts'
 import denoland_std from './registries/deno.land_std.ts'
@@ -97,14 +97,8 @@ export default async function upgrade({
           cache.set(`${registry.name}:${name}`, toVersion)
   
         if (
-          fromVersion.replace('v', '') === toVersion.replace('v', '') ||
-          toVersion.includes('rc') ||
-          toVersion.includes('alpha') ||
-          toVersion.includes('beta') ||
-          toVersion.includes('unstable') ||
-          toVersion.includes('canary') ||
-          toVersion.includes('nightly') ||
-          toVersion.includes('dev')
+          difference(fromVersion, toVersion) === null ||
+          prerelease(toVersion) !== null
         ) {
           if (list[`${registry.name}:${name}`] !== undefined)
             list[`${registry.name}:${name}`].skipped++
