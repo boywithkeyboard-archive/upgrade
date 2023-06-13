@@ -1,3 +1,4 @@
+import { gte, prerelease } from 'https://deno.land/std@0.191.0/semver/mod.ts'
 import { Registry } from './_registry.ts'
 
 export default new Registry({
@@ -12,13 +13,21 @@ export default new Registry({
   async getNextVersion(name) {
     const res = await fetch(`https://apiland.deno.dev/v2/modules/${name}`)
 
-    if (!res.ok) {
+    if (!res.ok)
       throw new Error('deno.land/x fetch error')
+
+    const json = await res.json() as { versions: string[] }
+
+    let latestVersion
+  
+    for (const version of json.versions) {
+      if (!latestVersion)
+        latestVersion = version
+      else if (gte(version, latestVersion) && !prerelease(version))
+        latestVersion = version
     }
-
-    const json = await res.json()
-
-    return json.latest_version
+  
+    return latestVersion as string
   },
   getCurrentVersionUrl(name, version) {
     return `https://deno.land/x/${name}@${version}`
