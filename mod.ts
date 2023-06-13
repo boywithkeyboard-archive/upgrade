@@ -1,3 +1,4 @@
+import { parse } from 'https://deno.land/std@0.191.0/flags/mod.ts'
 import { brightBlue, brightGreen, brightRed, gray, strikethrough, underline, white } from 'https://deno.land/std@0.191.0/fmt/colors.ts'
 import { walk } from 'https://deno.land/std@0.191.0/fs/walk.ts'
 import { valid } from 'https://deno.land/std@0.191.0/semver/mod.ts'
@@ -19,10 +20,10 @@ type Upgrade = {
 }
 
 export default async function upgrade({
-  directory = Deno.cwd(),
+  dir = Deno.cwd(),
   ext = ['js', 'ts', 'json', 'md']
 }: {
-  directory?: string,
+  dir?: string,
   ext?: string[]
 } = {}) {
   const cache = new Map<string, string>()
@@ -40,7 +41,7 @@ export default async function upgrade({
   , list: Record<string, { upgraded: number, failed: number, skipped: number, fromVersion?: string, toVersion?: string }> = {}
 
   // walk through files
-  for await (const { path, isFile } of walk(directory)) {
+  for await (const { path, isFile } of walk(dir)) {
     if (!isFile || !ext.some(e => path.endsWith(`.${e}`)))
       continue
 
@@ -160,5 +161,11 @@ export default async function upgrade({
   return { upgrades }
 }
 
-if (import.meta.main)
-  upgrade()
+if (import.meta.main) {
+  const { dir, ext } = parse(Deno.args)
+
+  upgrade({
+    dir,
+    ...(ext && { ext: ext.split(',') })
+  })
+}
