@@ -149,9 +149,9 @@ export default async function upgrade({
 
   for (const [key, value] of Object.entries(list)) {
     if (value.toVersion && value.fromVersion) {
-      logString += `${white(key.split(':')[1])} × ${strikethrough(value.fromVersion)} → ${brightGreen(value.toVersion)} (${brightGreen(`${value.upgraded} ✓`)}, ${brightBlue(`${value.skipped} ⁄`)}, ${brightRed(`${value.failed} ✗`)} failed)\n`
+      logString += `${white(key.split(':')[1])} × ${strikethrough(value.fromVersion)} → ${brightGreen(value.toVersion)}\n`
     } else {
-      logString += `${white(key.split(':')[1])} × ${value.fromVersion ? value.fromVersion : '?.?.?'} (${brightGreen(`${value.upgraded} ✓`)}, ${brightBlue(`${value.skipped} ⁄`)}, ${brightRed(`${value.failed} ✗`)})\n`
+      logString += `${white(key.split(':')[1])} × ${value.fromVersion ? value.fromVersion : '?.?.?'} ${value.skipped > 0 ? brightBlue('(skipped)') : brightRed('(failed)')}\n`
     }
   }
 
