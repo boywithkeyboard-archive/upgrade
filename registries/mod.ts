@@ -37,6 +37,9 @@ export function RegistryFactory(registry: Registry) {
       }
       return sortedVersions[index - 1] ?? version
     },
+    isURLFromRegistry(url: string) {
+      return url.startsWith('https://' + this.prefix)
+    },
   } as Required<Registry>
 }
 
@@ -46,3 +49,19 @@ export * from './raw.githubusercontent.com.ts'
 export * from './cdn.jsdelivr.net-npm.ts'
 export * from './cdn.jsdelivr.net-gh.ts'
 export * from './esm.sh.ts'
+
+import { DenoLandX } from './deno.land-x.ts'
+import { DenoLandStd } from './deno.land-std.ts'
+import { Github } from './raw.githubusercontent.com.ts'
+import { JSDeliverNPM } from './cdn.jsdelivr.net-npm.ts'
+import { JSDeliverGH } from './cdn.jsdelivr.net-gh.ts'
+import { EsmSh } from './esm.sh.ts'
+
+export const registries = [
+  DenoLandStd,
+  DenoLandX,
+  Github,
+  JSDeliverNPM,
+  JSDeliverGH,
+  EsmSh,
+] as const

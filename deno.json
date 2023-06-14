@@ -4,6 +4,6 @@
     "singleQuote": true
   },
   "tasks": {
-    "upgrade": "deno run -A ./src/cli.ts"
+    "upgrade": "deno run -A ./main.ts"
   }
 }

@@ -1,9 +1,6 @@
-import {
-  extensions as defaultExtensions,
-  ignoreLineComment,
-} from './options.ts'
+import { defaultExtensions, ignoreLineComment } from './config.ts'
 import { walk } from './deps.ts'
-import * as registryList from './registries/mod.ts'
+import { registries } from './registries/mod.ts'
 
 const urlRegex = /(https?:\/\/[^\s]+[\d\w])/g
 
@@ -17,7 +14,6 @@ export async function diff(fnOptions: Partial<DiffOptions>) {
     dir: fnOptions.dir ?? Deno.cwd(),
     extensions: fnOptions.extensions ?? defaultExtensions,
   }
-  const registries = Object.values(registryList)
   const matches: {
     registry: typeof registries[number]
     path: string

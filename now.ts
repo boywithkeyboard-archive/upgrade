@@ -1,5 +1,5 @@
 import { diff } from './diff.ts'
-import { extensions as defaultExtensions } from './options.ts'
+import { defaultExtensions } from './config.ts'
 
 type NowOptions = Parameters<typeof diff>[0]
 
