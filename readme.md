@@ -36,6 +36,24 @@ Each command accepts three flags for advanced use-cases:
 | `-e`  | `--ext`  | Which file extensions to include.           | `js,ts,json,md,tsx,jsx`     |
 | `-h`  | `--help` | Displays information about the command      | 
 
+## Ignore Comments
+
+If you have a dependency that you don't want to be upgraded by `Upgrade`, you can add a ignore comment to it. For example:
+
+```ts
+// upgrade-ignore-line
+import { something } from 'https://deno.land/x/somemodule@v2.2.1/mod.ts'
+```
+
+or with markup files
+
+```md
+<!-- upgrade-ignore-line -->
+deno run -A https://deno.land/x/upgrade/main.ts
+```
+
+both `diff` and `upgrade` will skip over these lines and won't touch them
+
 ## Usage Examples
 Check the file structure in the current directory and upgrade all dependencies to the latest version:
 
