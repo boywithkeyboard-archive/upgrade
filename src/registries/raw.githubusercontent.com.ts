@@ -1,5 +1,5 @@
 import { formatFetchErrorMessage } from '../util.ts'
-import { RegistryFactory } from '../registries.ts'
+import { RegistryFactory } from './mod.ts'
 
 export const Github = RegistryFactory({
   registryName: 'raw.githubusercontent.com',

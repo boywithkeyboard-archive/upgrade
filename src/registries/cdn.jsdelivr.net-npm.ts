@@ -1,4 +1,4 @@
-import { RegistryFactory } from '../registries.ts'
+import { RegistryFactory } from './mod.ts'
 import { formatFetchErrorMessage } from '../util.ts'
 
 export const JSDeliverNPM = RegistryFactory({

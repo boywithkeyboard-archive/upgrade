@@ -1,4 +1,4 @@
-import { RegistryFactory } from '../registries.ts'
+import { RegistryFactory } from './mod.ts'
 
 export const EsmSh = RegistryFactory({
   registryName: 'esm.sh',
