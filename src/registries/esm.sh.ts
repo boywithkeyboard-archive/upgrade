@@ -7,12 +7,12 @@ export const EsmSh = RegistryFactory({
     if (packageName.length > 0) {
       return packageName
     }
-    return url.split('/')[1] + '/' + url.split('/')[2].split('@')[0]
+    return url.split('/')[3].split('@')[0]
   },
   getCurrentVersionFromURL(url: string) {
     const scopedPackage = url.split('/')[1].split('@')[0].length === 0
     if (scopedPackage) {
-      return url.split('/')[2].split('@')[1]
+      return url.split('/')[3].split('@')[1]
     }
     return url.split('/')[1].split('@')[1]
   },

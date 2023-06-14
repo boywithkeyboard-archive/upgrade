@@ -3,14 +3,20 @@ import { RegistryFactory } from '../registries.ts'
 
 export const DenoLandX = RegistryFactory({
   registryName: 'deno.land',
-  prefix: 'deno.land/std',
+  prefix: 'deno.land/x',
   getNameFromURL(url: string) {
     // this creates 2 unnessecary objects
-    return url.split('/')[2].split('@')[0]
+    if (url.includes('@')) {
+      return url.split('/')[4].split('@')[0]
+    }
+    return url.split('/')[4]
   },
   getCurrentVersionFromURL(url: string) {
     // this creates 2 unnessecary objects
-    return url.split('/')[2].split('@')[1]
+    if (url.includes('@')) {
+      return url.split('/')[4].split('@')[1]
+    }
+    return null
   },
   async getVersions(name: string) {
     const res = await fetch(`https://apiland.deno.dev/v2/modules/${name}`)

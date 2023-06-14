@@ -9,7 +9,7 @@ export const DenoLandStd = RegistryFactory({
   },
   getCurrentVersionFromURL(url: string) {
     // this creates 2 unnessecary objects
-    return url.split('/')[1].split('@')[1]
+    return url.split('/')[3].split('@')[1]
   },
   async getVersions(_name: string) {
     const res = await fetch(`https://apiland.deno.dev/v2/modules/std`)

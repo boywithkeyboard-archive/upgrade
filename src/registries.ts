@@ -1,11 +1,10 @@
 import { rcompare } from './deps.ts'
-export * as list from './registries/mod.ts'
 
 interface Registry {
   registryName: string
   prefix?: string
   getNameFromURL: (url: string) => string
-  getCurrentVersionFromURL: (url: string) => string
+  getCurrentVersionFromURL: (url: string) => string | null
   getVersions: (name: string) => Promise<string[]>
   getLatestVersion?: (name: string) => Promise<string>
   getNextVersion?: (name: string, version: string) => Promise<string>
