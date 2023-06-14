@@ -1,14 +1,20 @@
 import { diff } from '../diff.ts'
-import { colors } from '../deps.ts'
+import { colors, parseFlags } from '../deps.ts'
 import { extensions } from '../options.ts'
 
 export async function exec(args: string[]) {
-  for (const match of await diff()) {
+  const flags = parseFlags(args, Flags)
+  for (
+    const match of await diff({
+      dir: flags.dir,
+      extensions: flags.extensions,
+    })
+  ) {
     if (match.currentVersion === match.latestVersion) {
       continue
     }
     console.log(
-      `${colors.brightBlue(match.registry)} - ${
+      `${colors.brightBlue(match.registry.registryName)} - ${
         colors.white(match.package)
       } ${(colors.red(match.currentVersion ?? 'NONE'))} → ${
         colors.brightGreen(match.latestVersion ?? 'unknown')
@@ -17,39 +23,24 @@ export async function exec(args: string[]) {
   }
 }
 
-export const description =
-  'Show the difference between the current and latest versions of dependencies.'
+export const Descriptions = {
+  main:
+    'Show the difference between the current and latest versions of dependencies.',
+  dir: 'Directory to search for files to diff',
+  extensions: 'File extensions to search for',
+  help: 'Show help',
+}
 
-export const flags = {
-  boolean: {
-    help: {
-      alias: 'h',
-      description: 'Show this help message and exit.',
-    },
-    version: {
-      alias: 'v',
-      description: 'Show the version number and exit.',
-    },
-    dir: {
-      alias: 'd',
-      description: 'Directory to search for files. (default: cwd)',
-    },
-    ext: {
-      alias: 'e',
-      description: `File extensions to check. (default: ${
-        extensions.join(',')
-      })`,
-    },
+export const Flags: Parameters<typeof parseFlags>[1] = {
+  boolean: ['help'],
+  alias: {
+    help: 'h',
+    dir: 'd',
+    extensions: 'e',
   },
-}
-
-export const help = `
-Usage: deno run -A --unstable https://deno.land/x/upgrade/cli/diff.ts [options]
-
-Options:
-${
-  Object.entries(flags.boolean).map(([name, { description, alias }]) =>
-    `    -${`${alias}, --${name}`.padEnd(15)}\t${description}`
-  ).join('\n')
-}
-`
+  default: {
+    dir: Deno.cwd(),
+    extensions,
+  },
+  string: ['dir', 'extensions'],
+} as const
