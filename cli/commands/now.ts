@@ -6,7 +6,7 @@ import { defaultExtensions } from '../../config.ts'
 export default CommandFactory({
   name: 'now',
   exec: async function (args: CommandArgs) {
-    console.info(colors.gray('checking for differences in dependencies...'))
+    console.info(colors.gray('upgrading dependencies...'))
     const flags = parseFlags(args, this.flags)
     const matches = await now({
       dir: flags.dir ?? Deno.cwd(),
