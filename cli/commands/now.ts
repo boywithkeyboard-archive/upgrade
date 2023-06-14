@@ -50,7 +50,7 @@ export default CommandFactory({
   descriptions: new Map([
     [
       'main',
-      'Shows the difference between the current and latest versions of dependencies.',
+      'Upgrades dependencies to their latest versions.',
     ],
     [
       'dir',
