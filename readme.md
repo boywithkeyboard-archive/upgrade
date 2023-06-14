@@ -12,7 +12,7 @@ await upgrade({
 ### CLI
 
 ```bash
-deno run -A https://deno.land/x/upgrade@v0.3.0/mod.ts
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts
 ```
 
 | Command | Description                                 | Default                     |
