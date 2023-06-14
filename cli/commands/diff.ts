@@ -10,7 +10,7 @@ export default CommandFactory({
     const flags = parseFlags(args, this.flags)
     const matches = await diff({
       dir: flags.dir ?? Deno.cwd(),
-      extensions: flags.ext ?? defaultExtensions,
+      extensions: flags.ext.split(',') ?? defaultExtensions,
     })
     if (
       matches.filter((v) => v.currentVersion !== v.latestVersion).length === 0
