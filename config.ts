@@ -6,5 +6,8 @@ export const defaultExtensions = [
   'tsx',
   'jsx',
 ]
-export const ignoreLineComment = `// upgrade-ignore-line`
+export const ignoreLineComments = [
+  `// upgrade-ignore-line`,
+  `<!-- upgrade-ignore-line -->`,
+]
 export const defaultDirectory = Deno.cwd()

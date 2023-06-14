@@ -1,4 +1,4 @@
-import { defaultExtensions, ignoreLineComment } from './config.ts'
+import { defaultExtensions, ignoreLineComments } from './config.ts'
 import { walk } from './deps.ts'
 import { registries } from './registries/mod.ts'
 
@@ -30,7 +30,7 @@ export async function diff(fnOptions: Partial<DiffOptions>) {
     const lines = content.split('\n')
     for (let l = 0; l < lines.length; l++) {
       const line = lines[l]
-      if (line.includes(ignoreLineComment)) {
+      if (ignoreLineComments.some((v) => line.includes(v))) {
         l++
         continue
       }
