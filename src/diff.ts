@@ -12,33 +12,15 @@ interface DiffOptions {
   extensions: string[]
 }
 
-interface Upgrade {
-  registry: string
-  package: string
-  file: string
-  fromVersion: string
-  toVersion: string
-  url: string
-  fileCount: number
-}
-
-interface Listed {
-  upgraded: number
-  failed: number
-  skipped: number
-  fromVersion?: string
-  toVersion?: string
-}
-
-export async function diff(options: DiffOptions = {
-  dir: Deno.cwd(),
-  extensions: defaultExtensions,
-}) {
+export async function diff(fnOptions: Partial<DiffOptions>) {
+  const options = {
+    dir: fnOptions.dir ?? Deno.cwd(),
+    extensions: fnOptions.extensions ?? defaultExtensions,
+  }
   const registries = Object.values(registryList)
   const matches: {
     registry: typeof registries[number]
     path: string
-    bytePos: number
     line: number
     column: number
     url: string
@@ -66,14 +48,12 @@ export async function diff(options: DiffOptions = {
         }
         for (const registry of registries) {
           if (url.startsWith('https://' + registry.prefix)) {
-            const bytePos = content.indexOf(url)
             const column = line.indexOf(url)
             matches.push({
               registry,
               path,
-              bytePos,
               line: l + 1,
-              column,
+              column: column + 1,
               url,
             })
           }
@@ -94,12 +74,11 @@ export async function diff(options: DiffOptions = {
   await Promise.all(fetches.values())
 
   const result: {
-    registry: string
+    registry: typeof registries[number]
     package: string
     currentVersion: string | null
     latestVersion?: string
     url: string
-    bytePos: number
     line: number
     column: number
     path: string
@@ -111,12 +90,11 @@ export async function diff(options: DiffOptions = {
     const currentVersion = registry.getCurrentVersionFromURL(url)
     const latestVersion = await fetches.get(url)
     result.push({
-      registry: registry.registryName,
+      registry: registry,
       package: name,
       currentVersion,
       latestVersion,
       url,
-      bytePos: match.bytePos,
       line: match.line,
       column: match.column,
       path: match.path,
