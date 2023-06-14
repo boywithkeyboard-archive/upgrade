@@ -12,7 +12,7 @@ interface DiffOptions {
 export async function diff(fnOptions: Partial<DiffOptions>) {
   const options = {
     dir: fnOptions.dir ?? Deno.cwd(),
-    extensions: (fnOptions.extensions as unknown as string).split(',') ?? defaultExtensions,
+    extensions: fnOptions.extensions ?? defaultExtensions,
   }
   const matches: {
     registry: typeof registries[number]
