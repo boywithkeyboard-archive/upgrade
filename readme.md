@@ -11,13 +11,13 @@ Upgrade can be executed without arguments, running the now command with default 
 The Upgrade CLI doesn't require traditional installation as it's executable directly via Deno:
 
 ```bash
-deno run -A https://deno.land/x/upgrade/main.ts
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts
 ```
 
 But if you use the tool often, it is a good idea to run `deno install`.
 
 ```bash
-deno install -A -n upgrade https://deno.land/x/upgrade/main.ts
+deno install -A -n upgrade https://deno.land/x/upgrade@v0.3.0/main.ts
 ```
 
 ## Commands
@@ -40,29 +40,29 @@ Each command accepts three flags for advanced use-cases:
 Check the file structure in the current directory and upgrade all dependencies to the latest version:
 
 ```bash
-deno run -A https://deno.land/x/upgrade/main.ts
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts
 ```
 
 Check the file structure in a specific directory and upgrade all dependencies to the latest version:
 
 ```bash
-deno run -A https://deno.land/x/upgrade/main.ts --dir /path/to/dir
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts --dir /path/to/dir
 ```
 
 Check the file structure in the current directory for .ts and .js files and upgrade all dependencies to the latest version:
 
 ```bash
-deno run -A https://deno.land/x/upgrade/main.ts --ext ts,js
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts --ext ts,js
 ```
 
 Display differences between current and latest dependencies in a specific directory:
 
 ```bash
-deno run -A https://deno.land/x/upgrade/main.ts diff --dir /path/to/dir
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts diff --dir /path/to/dir
 ```
 
 For additional help or information, use the -h or --help flag:
 ```bash
-deno run -A https://deno.land/x/upgrade/main.ts --help
-deno run -A https://deno.land/x/upgrade/main.ts diff --help
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts --help
+deno run -A https://deno.land/x/upgrade@v0.3.0/main.ts diff --help
 ```
