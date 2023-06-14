@@ -21,7 +21,7 @@ export const DenoLandStd = RegistryFactory({
     const json = await res.json() as { versions: string[] }
     return json.versions
   },
-  createVersionURL(_name: string, version: string) {
+  createVersionURL(_name: string, version: string | null) {
     return `https://deno.land/std@${version}`
   },
   // deno-lint-ignore require-await

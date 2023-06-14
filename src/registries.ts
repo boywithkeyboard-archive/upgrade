@@ -8,7 +8,7 @@ interface Registry {
   getVersions: (name: string) => Promise<string[]>
   getLatestVersion?: (name: string) => Promise<string>
   getNextVersion?: (name: string, version: string) => Promise<string>
-  createVersionURL: (name: string, version: string) => string
+  createVersionURL: (name: string, version: string | null) => string
   getRepository: (
     name: string,
   ) => Promise<string | undefined>

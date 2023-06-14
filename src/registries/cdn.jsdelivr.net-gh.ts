@@ -25,7 +25,7 @@ export const JSDeliverGH = RegistryFactory({
 
     return (await res.json())[0].tag_name
   },
-  createVersionURL(name: string, version: string) {
+  createVersionURL(name: string, version: string | null) {
     return `https://github.com/${name}/releases/tag/${version}`
   },
   // deno-lint-ignore require-await

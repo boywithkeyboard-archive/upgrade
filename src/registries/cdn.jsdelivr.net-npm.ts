@@ -31,7 +31,7 @@ export const JSDeliverNPM = RegistryFactory({
     const json = await res.json() as { versions: Record<string, unknown> }
     return Object.keys(json.versions)
   },
-  createVersionURL(name: string, version: string) {
+  createVersionURL(name: string, version: string | null) {
     return `https://npmjs.com/package/${name}/v/${version}`
   },
   async getRepository(name: string) {

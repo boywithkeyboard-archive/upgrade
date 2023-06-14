@@ -28,8 +28,9 @@ export const DenoLandX = RegistryFactory({
     const json = await res.json() as { versions: string[] }
     return json.versions
   },
-  createVersionURL(name: string, version: string) {
-    return `https://deno.land/std/${name}@${version}`
+  createVersionURL(name: string, version: string | null) {
+    if (version === null) return `https://deno.land/x/${name}`
+    return `https://deno.land/x/${name}@${version}`
   },
   async getRepository(name: string) {
     const res = await fetch(
