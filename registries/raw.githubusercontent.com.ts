@@ -1,29 +1,38 @@
-import { Registry } from './_registry.ts'
+import { formatFetchErrorMessage } from '../util.ts'
+import { RegistryFactory } from './mod.ts'
 
-export default new Registry({
-  name: 'raw.githubusercontent.com',
-  getName(url) {
+export const Github = RegistryFactory({
+  registryName: 'raw.githubusercontent.com',
+  getNameFromURL(url: string) {
+    // this creates 2 unnessecary objects
     return url.split('/')[1] + '/' + url.split('/')[2] // org/repo
   },
-  getCurrentVersion(url) {
+  getCurrentVersionFromURL(url: string) {
+    // this creates 2 unnessecary objects
     return url.split('/')[3]
   },
-  async getNextVersion(name) {
+  async getVersions(name: string) {
     const res = await fetch(`https://api.github.com/repos/${name}/releases`)
 
     if (!res.ok) {
-      throw new Error('raw.githubusercontent.com fetch error')
+      throw new Error(
+        formatFetchErrorMessage(
+          'raw.githubusercontent.com releases fetch error',
+          res,
+        ),
+      )
     }
 
-    return (await res.json())[0].tag_name
+    const json = await res.json() as {
+      tag_name: string
+    }[]
+    return json.map((release) => release.tag_name)
   },
-  getCurrentVersionUrl(name, version) {
+  createVersionURL(name: string, version: string) {
     return `https://github.com/${name}/releases/tag/${version}`
   },
-  getNextVersionUrl(name, version) {
-    return `https://github.com/${name}/releases/tag/${version}`
-  },
-  getRepository(name) {
+  // deno-lint-ignore require-await
+  async getRepository(name: string) {
     return `https://github.com/${name}`
   },
 })
