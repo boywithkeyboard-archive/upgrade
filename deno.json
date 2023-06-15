@@ -2,8 +2,5 @@
   "fmt": {
     "semiColons": false,
     "singleQuote": true
-  },
-  "tasks": {
-    "upgrade": "deno run -A ./main.ts"
   }
 }
