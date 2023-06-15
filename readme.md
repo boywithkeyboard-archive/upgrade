@@ -7,7 +7,7 @@
 ### API
 
 ```ts
-import upgrade from 'https://deno.land/x/upgrade/mod.ts'
+import upgrade from 'https://deno.land/x/upgrade@v0.4.0/mod.ts'
 
 await upgrade({
   dir: Deno.cwd(),
