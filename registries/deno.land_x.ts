@@ -13,20 +13,22 @@ export default new Registry({
   async getNextVersion(name) {
     const res = await fetch(`https://apiland.deno.dev/v2/modules/${name}`)
 
-    if (!res.ok)
+    if (!res.ok) {
       throw new Error('deno.land/x fetch error')
+    }
 
     const json = await res.json() as { versions: string[] }
 
     let latestVersion
-  
+
     for (const version of json.versions) {
-      if (!latestVersion)
+      if (!latestVersion) {
         latestVersion = version
-      else if (gte(version, latestVersion) && !prerelease(version))
+      } else if (gte(version, latestVersion) && !prerelease(version)) {
         latestVersion = version
+      }
     }
-  
+
     return latestVersion as string
   },
   getCurrentVersionUrl(name, version) {
