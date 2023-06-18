@@ -1,35 +1,36 @@
 import { Registry } from "../Registry.ts";
 
-export default class ESM_SH extends Registry {
-  static registryName = "esm.sh";
-  static urlPrefix = "https://esm.sh";
+export default class JS_DELIVR_NPM extends Registry {
+  static registryName = "cdn.jsdelivr.net/npm";
+  static urlPrefix = "https://cdn.jsdelivr.net/npm";
   static getModuleNameFromURL(url: string) {
-    const moduleName = url
-      .split("/")[1]
+    const packageName = url
+      .split("/")[2]
       .split("@")[0];
-    if (moduleName.length > 0) {
-      return moduleName;
+
+    if (packageName.length > 0) {
+      return packageName;
     }
-    return url.split("/")[1] + "/" + url.split("/")[2].split("@")[0];
+
+    return url.split("/")[2] + "/" + url.split("/")[3].split("@")[0];
   }
   static getVersionFromURL(url: string) {
-    const isScopedPackage = url.split("/")[1].split("@")[0].length === 0;
+    const isScopedPackage = url.split("/")[2].split("@")[0].length === 0;
     if (isScopedPackage) {
-      return url.split("/")[2].split("@")[1];
+      return url.split("/")[3].split("@")[1];
     }
-    return url.split("/")[1].split("@")[1];
+    return url.split("/")[2].split("@")[1];
   }
-  static async getVersions(moduleName: string) {
+  static async fetchVersions(moduleName: string) {
     const res = await fetch(`https://registry.npmjs.org/${moduleName}`);
     if (!res.ok) {
       throw new Error(this.buildFetchErrorMessage(moduleName));
     }
-    const json = await res.json() as { versions: string[] };
+    const json = await res.json() as { versions: Record<string, unknown> };
     return Object.keys(json.versions);
   }
   static async fetchRepository(moduleName: string) {
     const res = await fetch(`https://registry.npmjs.org/${moduleName}`);
-
     if (!res.ok) {
       return undefined;
     }

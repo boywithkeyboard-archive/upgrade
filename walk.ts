@@ -1,5 +1,5 @@
 import { fs } from "./deps.ts";
-import { registries } from "./registries.ts";
+import { registries } from "./registries/mod.ts";
 import { urlRegex } from "./urlRegex.ts";
 
 export async function* walk(directory: string, extensions: string[]) {
@@ -20,12 +20,12 @@ export async function* walk(directory: string, extensions: string[]) {
       for (let url of urls) {
         url = url.replaceAll("'", "").replaceAll('"', "").replace(")", "");
 
-        if (registries.some((r) => url === `https://${r.prefix}`)) {
+        if (registries.some((r) => url === r.urlPrefix)) {
           continue;
         }
 
         const registry = registries.filter((r) =>
-          url.startsWith(`https://${r.prefix}`)
+          url.startsWith(r.urlPrefix)
         )[0];
 
         if (

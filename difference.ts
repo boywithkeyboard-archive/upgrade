@@ -18,18 +18,17 @@ export async function difference({
 
   for await (const { path, registry, url } of walk(directory, extensions)) {
     try {
-      const moduleName = await registry.getName(url);
-      const currentVersion = await registry.getCurrentVersion(url);
+      const moduleName = registry.getModuleNameFromURL(url);
+      const currentVersion = registry.getVersionFromURL(url);
 
       if (!semver.valid(currentVersion)) {
         continue;
       }
-
       let nextVersion: string;
 
       try {
         nextVersion = cache.get(`${registry.name}:${moduleName}`) ??
-          await registry.getNextVersion(moduleName, url);
+          await registry.fetchNextVersion(moduleName, currentVersion);
       } catch (_) {
         changes.push({
           moduleName,
@@ -87,6 +86,5 @@ export async function difference({
       continue;
     }
   }
-
   return changes;
 }

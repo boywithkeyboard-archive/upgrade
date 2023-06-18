@@ -1,15 +1,20 @@
 import { Registry } from "../Registry.ts";
 
-export default class GITHUB extends Registry {
-  static registryName = "raw.githubusercontent.com";
-  static urlPrefix = "https://raw.githubusercontent.com";
+export default class JS_DELIVR_GH extends Registry {
+  static registryName = "cdn.jsdelivr.net/gh";
+  static urlPrefix = "https://cdn.jsdelivr.net/gh";
   static getModuleNameFromURL(url: string) {
-    return url.split("/")[1] + "/" + url.split("/")[2]; // org/repo
+    const split = url.split("/");
+    return split[2] + "/" + split[3].split("@")[0];
   }
   static getVersionFromURL(url: string) {
-    return url.split("/")[3];
+    const isScopedPackage = url.split("/")[2].split("@")[0].length === 0;
+    if (isScopedPackage) {
+      return url.split("/")[3].split("@")[1];
+    }
+    return url.split("/")[3].split("@")[1];
   }
-  static async getVersions(moduleName: string) {
+  static async fetchVersions(moduleName: string) {
     const res = await fetch(
       `https://api.github.com/repos/${moduleName}/releases`,
     );

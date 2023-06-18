@@ -1,43 +1,27 @@
-import { gte, prerelease } from "https://deno.land/std@0.192.0/semver/mod.ts";
 import { Registry } from "../Registry.ts";
 
-export const DENOLAND_STD = new Registry({
-  name: "deno.land",
-  prefix: "deno.land/std",
-  getName() {
+export default class DenoLandSTD extends Registry {
+  static registryName = "deno.land/std";
+  static urlPrefix = "https://deno.land/std";
+  static getModuleNameFromURL(_url: string) {
     return "std";
-  },
-  getCurrentVersion(url) {
+  }
+  static getVersionFromURL(url: string) {
     return url.split("/")[1].split("@")[1];
-  },
-  async getNextVersion() {
+  }
+  static async fetchVersions() {
     const res = await fetch("https://apiland.deno.dev/v2/modules/std");
 
     if (!res.ok) {
-      throw new Error("deno.land/std fetch error");
+      throw new Error(this.buildFetchErrorMessage("std"));
     }
 
     const json = await res.json() as { versions: string[] };
 
-    let latestVersion;
-
-    for (const version of json.versions) {
-      if (!latestVersion) {
-        latestVersion = version;
-      } else if (gte(version, latestVersion) && !prerelease(version)) {
-        latestVersion = version;
-      }
-    }
-
-    return latestVersion as string;
-  },
-  getCurrentVersionUrl(_name, version) {
-    return `https://deno.land/std@${version}`;
-  },
-  getNextVersionUrl(_name, version) {
-    return `https://deno.land/std@${version}`;
-  },
-  getRepository() {
-    return "https://github.com/denoland/deno_std";
-  },
-});
+    return json.versions;
+  }
+  // deno-lint-ignore require-await
+  static async fetchRepository(_moduleName: string) {
+    return `https://github.com/denoland/deno_std`;
+  }
+}
