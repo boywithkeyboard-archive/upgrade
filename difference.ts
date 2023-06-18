@@ -30,7 +30,6 @@ export async function difference({
         nextVersion = cache.get(`${registry.name}:${moduleName}`) ??
           await registry.fetchNextVersion(moduleName, currentVersion);
       } catch (_) {
-        console.log(_);
         changes.push({
           moduleName,
           registryName: registry.name,
