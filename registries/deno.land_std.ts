@@ -1,4 +1,4 @@
-import { gte, prerelease } from "../deps.ts";
+import { semver } from "../deps.ts";
 import { Registry } from "../Registry.ts";
 
 export const DENOLAND_STD = new Registry({
@@ -24,7 +24,9 @@ export const DENOLAND_STD = new Registry({
     for (const version of json.versions) {
       if (!latestVersion) {
         latestVersion = version;
-      } else if (gte(version, latestVersion) && !prerelease(version)) {
+      } else if (
+        semver.gte(version, latestVersion) && !semver.prerelease(version)
+      ) {
         latestVersion = version;
       }
     }
