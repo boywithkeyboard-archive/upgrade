@@ -17,7 +17,7 @@ export class Registry {
   constructor(opts: {
     name: string;
     prefix?: string;
-    getName: (url: string) => Promise<string> | string;
+    getName: (url: string) => string;
     getCurrentVersion: (url: string) => Promise<string> | string;
     getNextVersion: (name: string, url: string) => Promise<string> | string;
     getCurrentVersionUrl: (

@@ -18,7 +18,7 @@ export async function difference({
 
   for await (const { path, registry, url } of walk(directory, extensions)) {
     try {
-      const moduleName = await registry.getName(url);
+      const moduleName = registry.getName(url);
       const currentVersion = await registry.getCurrentVersion(url);
 
       if (!semver.valid(currentVersion)) {
