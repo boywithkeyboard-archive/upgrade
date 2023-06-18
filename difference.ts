@@ -28,7 +28,7 @@ export async function difference({
 
       try {
         nextVersion = cache.get(`${registry.name}:${moduleName}`) ??
-          await registry.fetchNextVersion(moduleName, currentVersion);
+          await registry.fetchLatestVersion(moduleName);
       } catch (_) {
         changes.push({
           moduleName,
