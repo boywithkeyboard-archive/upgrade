@@ -1,36 +1,26 @@
 import { Registry } from "../Registry.ts";
-import { semver } from "../deps.ts";
 
-export const GITHUB = new Registry({
-  name: "raw.githubusercontent.com",
-  getName(url) {
+export default class GITHUB extends Registry {
+  static registryName = "raw.githubusercontent.com";
+  static urlPrefix = "https://raw.githubusercontent.com";
+  static getModuleNameFromURL(url: string) {
     return url.split("/")[1] + "/" + url.split("/")[2]; // org/repo
-  },
-  getCurrentVersion(url) {
+  }
+  static getVersionFromURL(url: string) {
     return url.split("/")[3];
-  },
-  async getVersions(name) {
-    const res = await fetch(`https://api.github.com/repos/${name}/releases`);
+  }
+  static async getVersions(moduleName: string) {
+    const res = await fetch(
+      `https://api.github.com/repos/${moduleName}/releases`,
+    );
     if (!res.ok) {
-      throw new Error("raw.githubusercontent.com fetch error");
+      throw new Error(this.buildFetchErrorMessage(moduleName));
     }
     const json = await res.json() as { tag_name: string }[];
     return json.map((release) => release.tag_name);
-  },
-  async getNextVersion(name, url) {
-    const versions = await this.getVersions(name, url);
-    const latestVersion = versions.filter((v) =>
-      !semver.prerelease(v)
-    ).sort(semver.rcompare)[0];
-    return latestVersion;
-  },
-  getCurrentVersionUrl(name, version) {
-    return `https://github.com/${name}/releases/tag/${version}`;
-  },
-  getNextVersionUrl(name, version) {
-    return `https://github.com/${name}/releases/tag/${version}`;
-  },
-  getRepository(name) {
-    return `https://github.com/${name}`;
-  },
-});
+  }
+  // deno-lint-ignore require-await
+  static async fetchRepository(moduleName: string) {
+    return `https://github.com/${moduleName}`;
+  }
+}

@@ -1,66 +1,39 @@
 import { Registry } from "../Registry.ts";
-import { semver } from "../deps.ts";
 
-export const ESM_SH = new Registry({
-  name: "esm.sh",
-  getName(url) {
-    const packageName = url
+export default class ESM_SH extends Registry {
+  static registryName = "esm.sh";
+  static urlPrefix = "https://esm.sh";
+  static getModuleNameFromURL(url: string) {
+    const moduleName = url
       .split("/")[1]
       .split("@")[0];
-
-    if (packageName.length > 0) {
-      return packageName;
+    if (moduleName.length > 0) {
+      return moduleName;
     }
-
     return url.split("/")[1] + "/" + url.split("/")[2].split("@")[0];
-  },
-  getCurrentVersion(url) {
-    const scopedPackage = url.split("/")[1].split("@")[0].length === 0;
-
-    return scopedPackage
-      ? (
-        url.split("/")[2].split("@")[1]
-      )
-      : (
-        url.split("/")[1].split("@")[1]
-      );
-  },
-  async getVersions(name, url) {
-    const res = await fetch(`https://registry.npmjs.org/${name}`);
-
-    if (!res.ok) {
-      throw new Error("esm.sh fetch error");
+  }
+  static getVersionFromURL(url: string) {
+    const isScopedPackage = url.split("/")[1].split("@")[0].length === 0;
+    if (isScopedPackage) {
+      return url.split("/")[2].split("@")[1];
     }
-
-    const json = await res.json();
-
+    return url.split("/")[1].split("@")[1];
+  }
+  static async getVersions(moduleName: string) {
+    const res = await fetch(`https://registry.npmjs.org/${moduleName}`);
+    if (!res.ok) {
+      throw new Error(this.buildFetchErrorMessage(moduleName));
+    }
+    const json = await res.json() as { versions: string[] };
     return Object.keys(json.versions);
-  },
-  async getNextVersion(name, url) {
-    const versions = await this.getVersions(name, url);
-    const latestVersion = versions.filter((v) =>
-      !semver.prerelease(v)
-    ).sort(semver.rcompare)[0];
-    return latestVersion;
-  },
-  getCurrentVersionUrl(name, version) {
-    return `https://npmjs.com/package/${name}/v/${version}`;
-  },
-  getNextVersionUrl(name, version) {
-    return `https://npmjs.com/package/${name}/v/${version}`;
-  },
-  async getRepository(name) {
-    const res = await fetch(`https://registry.npmjs.org/${name}`);
+  }
+  static async fetchRepository(moduleName: string) {
+    const res = await fetch(`https://registry.npmjs.org/${moduleName}`);
 
     if (!res.ok) {
       return undefined;
     }
-
-    const json = await res.json();
-
-    return json.versions[json["dist-tags"].latest].repository.url.replace(
-      "git+",
-      "",
-    ).replace(".git", "");
-  },
-});
+    const json = await res.json() as { repository: { url: string } };
+    return json.repository.url.slice(0, -4);
+  }
+}
