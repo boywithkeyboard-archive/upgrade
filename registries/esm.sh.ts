@@ -1,4 +1,5 @@
 import { Registry } from "../Registry.ts";
+import { semver } from "../deps.ts";
 
 export const ESM_SH = new Registry({
   name: "esm.sh",
@@ -24,14 +25,23 @@ export const ESM_SH = new Registry({
         url.split("/")[1].split("@")[1]
       );
   },
-  async getNextVersion(name) {
+  async getVersions(name, url) {
     const res = await fetch(`https://registry.npmjs.org/${name}`);
 
     if (!res.ok) {
       throw new Error("esm.sh fetch error");
     }
 
-    return (await res.json())["dist-tags"].latest;
+    const json = await res.json();
+
+    return Object.keys(json.versions);
+  },
+  async getNextVersion(name, url) {
+    const versions = await this.getVersions(name, url);
+    const latestVersion = versions.filter((v) =>
+      !semver.prerelease(v)
+    ).sort(semver.rcompare)[0];
+    return latestVersion;
   },
   getCurrentVersionUrl(name, version) {
     return `https://npmjs.com/package/${name}/v/${version}`;

@@ -10,28 +10,20 @@ export const DENOLAND_X = new Registry({
   getCurrentVersion(url) {
     return url.split("/")[2].split("@")[1];
   },
-  async getNextVersion(name) {
+  async getVersions(name: string) {
     const res = await fetch(`https://apiland.deno.dev/v2/modules/${name}`);
-
     if (!res.ok) {
       throw new Error("deno.land/x fetch error");
     }
-
     const json = await res.json() as { versions: string[] };
-
-    let latestVersion;
-
-    for (const version of json.versions) {
-      if (!latestVersion) {
-        latestVersion = version;
-      } else if (
-        semver.gte(version, latestVersion) && !semver.prerelease(version)
-      ) {
-        latestVersion = version;
-      }
-    }
-
-    return latestVersion as string;
+    return json.versions;
+  },
+  async getNextVersion(name, url) {
+    const versions = await this.getVersions(name, url);
+    const latestVersion = versions.filter((v) =>
+      !semver.prerelease(v)
+    ).sort(semver.rcompare)[0];
+    return latestVersion;
   },
   getCurrentVersionUrl(name, version) {
     return `https://deno.land/x/${name}@${version}`;

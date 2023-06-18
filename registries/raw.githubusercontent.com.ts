@@ -1,4 +1,5 @@
 import { Registry } from "../Registry.ts";
+import { semver } from "../deps.ts";
 
 export const GITHUB = new Registry({
   name: "raw.githubusercontent.com",
@@ -8,14 +9,20 @@ export const GITHUB = new Registry({
   getCurrentVersion(url) {
     return url.split("/")[3];
   },
-  async getNextVersion(name) {
+  async getVersions(name) {
     const res = await fetch(`https://api.github.com/repos/${name}/releases`);
-
     if (!res.ok) {
       throw new Error("raw.githubusercontent.com fetch error");
     }
-
-    return (await res.json())[0].tag_name;
+    const json = await res.json() as { tag_name: string }[];
+    return json.map((release) => release.tag_name);
+  },
+  async getNextVersion(name, url) {
+    const versions = await this.getVersions(name, url);
+    const latestVersion = versions.filter((v) =>
+      !semver.prerelease(v)
+    ).sort(semver.rcompare)[0];
+    return latestVersion;
   },
   getCurrentVersionUrl(name, version) {
     return `https://github.com/${name}/releases/tag/${version}`;

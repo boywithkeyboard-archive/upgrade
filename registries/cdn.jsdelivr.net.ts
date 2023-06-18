@@ -1,4 +1,5 @@
 import { Registry } from "../Registry.ts";
+import { semver } from "../deps.ts";
 
 export const JS_DELIVR = new Registry({
   name: "cdn.jsdelivr.net",
@@ -30,24 +31,29 @@ export const JS_DELIVR = new Registry({
         url.split("/")[2].split("@")[1]
       );
   },
-  async getNextVersion(name, url) {
+  async getVersions(name: string, url: string) {
     if (url.startsWith("cdn.jsdelivr.net/npm")) {
       const res = await fetch(`https://registry.npmjs.org/${name}`);
-
       if (!res.ok) {
         throw new Error();
       }
-
-      return (await res.json())["dist-tags"].latest;
+      const json = await res.json() as { versions: Record<string, unknown> };
+      return Object.keys(json.versions);
     } else {
       const res = await fetch(`https://api.github.com/repos/${name}/releases`);
-
       if (!res.ok) {
-        throw new Error("cdn.jsdelivr.net fetch error");
+        throw new Error();
       }
-
-      return (await res.json())[0].tag_name;
+      const json = await res.json() as { tag_name: string }[];
+      return json.map((release) => release.tag_name);
     }
+  },
+  async getNextVersion(name, url) {
+    const versions = await this.getVersions(name, url);
+    const latestVersion = versions.filter((v) =>
+      !semver.prerelease(v)
+    ).sort(semver.rcompare)[0];
+    return latestVersion;
   },
   getCurrentVersionUrl(name, version, url) {
     return url.includes("cdn.jsdelivr.net/npm")
