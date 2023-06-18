@@ -19,8 +19,8 @@ export class Registry {
     prefix?: string;
     getName: (url: string) => string;
     getCurrentVersion: (url: string) => Promise<string> | string;
-    getVersions(name: string, url: string): Promise<string[]>;
-    getNextVersion: (name: string, url: string) => Promise<string>;
+    getVersions(name: string): Promise<string[]>;
+    getNextVersion: (name: string) => Promise<string>;
     getCurrentVersionUrl: (
       name: string,
       version: string,
