@@ -3,6 +3,7 @@ import { Registry } from "../Registry.ts";
 export default class ESM_SH extends Registry {
   static registryName = "esm.sh";
   static urlPrefix = "https://esm.sh";
+
   static getModuleNameFromURL(url: string) {
     const moduleName = url
       .split("/")[1]
@@ -12,6 +13,7 @@ export default class ESM_SH extends Registry {
     }
     return url.split("/")[1] + "/" + url.split("/")[2].split("@")[0];
   }
+
   static getVersionFromURL(url: string) {
     const isScopedPackage = url.split("/")[1].split("@")[0].length === 0;
     if (isScopedPackage) {
@@ -19,6 +21,7 @@ export default class ESM_SH extends Registry {
     }
     return url.split("/")[1].split("@")[1];
   }
+
   static async getVersions(moduleName: string) {
     const res = await fetch(`https://registry.npmjs.org/${moduleName}`);
     if (!res.ok) {
@@ -27,6 +30,7 @@ export default class ESM_SH extends Registry {
     const json = await res.json() as { versions: string[] };
     return Object.keys(json.versions);
   }
+
   static async fetchRepository(moduleName: string) {
     const res = await fetch(`https://registry.npmjs.org/${moduleName}`);
 

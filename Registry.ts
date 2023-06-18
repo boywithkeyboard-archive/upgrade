@@ -7,6 +7,7 @@ export abstract class Registry {
   static getVersionFromURL: (url: string) => string;
   static fetchVersions: (name: string) => Promise<string[]>;
   static fetchRepository: (moduleName: string) => Promise<string | undefined>;
+
   /**
    * Fetches the latest version of a given module.
    * ignores prerelease versions by default.
@@ -22,6 +23,7 @@ export abstract class Registry {
     )[0];
     return latestVersion;
   }
+
   /**
    * Fetches the next version of a given module.
    * If the current version is the latest version,
@@ -54,12 +56,14 @@ export abstract class Registry {
       currentVersionIndex - 1
     ];
   }
+
   /**
    * Builds a versioned URL for a given module and version.
    */
   static buildVersionedURL(moduleName: string, version: string): string {
     return `${this.urlPrefix}/${moduleName}@${version}`;
   }
+
   /**
    * Builds an error message for when a module is not found.
    * Use this as the message when throwing an error for
