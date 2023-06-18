@@ -1,4 +1,4 @@
-import { gte, prerelease } from "https://deno.land/std@0.192.0/semver/mod.ts";
+import { gte, prerelease } from "../deps.ts";
 import { Registry } from "../Registry.ts";
 
 export const DENOLAND_STD = new Registry({
