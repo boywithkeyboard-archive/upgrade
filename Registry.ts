@@ -13,7 +13,8 @@ export class Registry {
   public getNextVersionUrl;
   /** get github repository (used by createMarkdown()) */
   public getRepository;
-
+  /** get all the versions for this module */
+  public getVersions;
   constructor(opts: {
     name: string;
     prefix?: string;
@@ -40,5 +41,6 @@ export class Registry {
     this.getCurrentVersionUrl = opts.getCurrentVersionUrl;
     this.getNextVersionUrl = opts.getNextVersionUrl;
     this.getRepository = opts.getRepository;
+    this.getVersions = opts.getVersions;
   }
 }
