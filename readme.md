@@ -1,49 +1,79 @@
 ## upgrade
 
-### To Do
-
-- [ ] make upgrade interactive
-
 ### API
 
-```ts
-import upgrade from 'https://deno.land/x/upgrade@v0.4.0/mod.ts'
+1. #### Check for changes.
 
-await upgrade({
-  dir: Deno.cwd(),
-  ext: ['js', 'ts', 'json', 'md'],
-})
-```
+   ```ts
+   import { difference } from "https://deno.land/x/upgrade@v1.0.0/difference.ts";
+
+   const changes = await difference({
+     directory: Deno.cwd(),
+     extensions: ["js", "jsx", "ts", "tsx", "json"],
+     allowBreaking: false,
+     allowUnstable: false,
+   });
+   ```
+
+2. #### Submit changes.
+
+   ```ts
+   import { upgrade } from "https://deno.land/x/upgrade@v1.0.0/upgrade.ts";
+
+   await upgrade(changes);
+   ```
 
 ### CLI
 
-```bash
-deno run -A https://deno.land/x/upgrade@v0.4.0/mod.ts
+### Setup
+
+`deno.json`
+
+```json
+{
+  "tasks": {
+    "upgrade": "https://deno.land/x/upgrade@v1.0.0/mod.ts"
+  }
+}
 ```
 
-| Command            | Description                                 | Default                     |
-| ------------------ | ------------------------------------------- | --------------------------- |
-| `-d`, `--dir`      | The parent directory of the files to check. | _Current Working Directory_ |
-| `-e`, `--ext`      | Which file extensions to include.           | `js,jsx,ts,tsx,json,md`     |
-| `-b`, `--breaking` | Allow breaking upgrades (major releases).   | `false`                     |
-| `-u`, `--unstable` | Allow unstable upgrades (prereleases).      | `false`                     |
+### Usage
+
+```bash
+deno task upgrade
+```
+
+| Command              | Description                                 | Default                     |
+| -------------------- | ------------------------------------------- | --------------------------- |
+| `-d`, `--directory`  | The parent directory of the files to check. | _Current Working Directory_ |
+| `-e`, `--extensions` | Which file extensions to include.           | `js,jsx,ts,tsx,json`        |
+| `-b`, `--breaking`   | Allow breaking upgrades (major releases).   | `false`                     |
+| `-u`, `--unstable`   | Allow unstable upgrades (prereleases).      | `false`                     |
+| `-q`, `--quick`      | Disable interactive experience.             | `false`                     |
 
 ### Examples
 
-- Allow breaking upgrades.
+- Pin a dependency to a specific version by applying `#pin` at the end of the
+  url.
 
-  ```bash
-  deno run -A https://deno.land/x/upgrade@v0.4.0/mod.ts -b
+  ```ts
+  import * as semver from "https://deno.land/std@0.192.0/semver/mod.ts#pin";
   ```
 
 - Allow unstable upgrades.
 
   ```bash
-  deno run -A https://deno.land/x/upgrade@v0.4.0/mod.ts -u
+  deno task upgrade -u
   ```
 
 - Set the parent directory to `src`.
 
   ```bash
-  deno run -A https://deno.land/x/upgrade@v0.4.0/mod.ts -d src
+  deno task upgrade -d src
+  ```
+
+- Allow only `.js` and `.ts` files.
+
+  ```bash
+  deno task upgrade -e js,ts
   ```
