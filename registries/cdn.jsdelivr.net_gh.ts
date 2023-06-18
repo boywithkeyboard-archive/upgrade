@@ -1,8 +1,8 @@
 import { Registry } from "../Registry.ts";
 
 export default class JS_DELIVR_GH extends Registry {
-  static registryName = "cdn.jsdelivr.net/npm";
-  static urlPrefix = "https://cdn.jsdelivr.net/npm";
+  static registryName = "cdn.jsdelivr.net/gh";
+  static urlPrefix = "https://cdn.jsdelivr.net/gh";
   static getModuleNameFromURL(url: string) {
     return url.split("/")[2] + "/" + url.split("/")[3];
   }
