@@ -13,6 +13,7 @@ if (import.meta.main) {
 
   const directory = args.d ?? args.directory;
   const extensions = args.e ?? args.extensions;
+  const quick = args.q ?? args.quick;
   const allowBreaking = args.b ?? args["allow-breaking"];
   const allowUnstable = args.u ?? args["allow-unstable"];
 
@@ -69,46 +70,42 @@ if (import.meta.main) {
         c[1].currentVersion !== c[1].nextVersion;
     })
   ) {
-    const submittedChanges: string[] = await Checkbox.prompt({
-      message: colors.stripColor("Can you confirm the changes?"),
-      options: Object.entries(filteredChanges).map(([key, value]) => {
-        return {
-          name: `${key} × ${value.currentVersion}${
-            value.nextVersion && value.type === "upgrade"
-              ? ` → ${value.nextVersion}`
-              : ""
-          }${
-            value.type === "fail"
-              ? " (failed)"
-              : value.type === "skip"
-              ? " (skipped)"
-              : ""
-          }`,
-          value: `${value.registryName}:${key}`,
-          checked: value.nextVersion && value.type === "upgrade" ? true : false,
-          disabled: value.type === "fail" || !value.nextVersion ||
-            value.reason === "same",
-        };
-      }),
-    });
+    if (!quick) {
+      const submittedChanges: string[] = await Checkbox.prompt({
+        message: colors.stripColor("Can you confirm the changes?"),
+        options: Object.entries(filteredChanges).map(([key, value]) => {
+          return {
+            name: `${key} × ${value.currentVersion}${
+              value.nextVersion && value.type === "upgrade"
+                ? ` → ${value.nextVersion}`
+                : ""
+            }${
+              value.type === "fail"
+                ? " (failed)"
+                : value.type === "skip"
+                ? " (skipped)"
+                : ""
+            }`,
+            value: `${value.registryName}:${key}`,
+            checked: value.nextVersion && value.type === "upgrade"
+              ? true
+              : false,
+            disabled: value.type === "fail" || !value.nextVersion ||
+              value.reason === "same",
+          };
+        }),
+      });
 
-    changes = changes.filter((c) => {
-      return submittedChanges.includes(`${c.registryName}:${c.moduleName}`);
-    });
+      changes = changes.filter((c) => {
+        return submittedChanges.includes(`${c.registryName}:${c.moduleName}`);
+      });
+    }
 
     if (changes.length > 0) {
-      await upgrade(changes);
-
-      const files: string[] = [];
-
-      for (const change of changes) {
-        if (!files.includes(change.filePath)) {
-          files.push(change.filePath);
-        }
-      }
+      const { files } = await upgrade(changes);
 
       console.info(
-        gray(`${brightGreen("success")} - updated ${files.length} files`),
+        gray(`${brightGreen("success")} - updated ${files} files`),
       );
     }
   } else {
