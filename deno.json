@@ -1,6 +1,6 @@
 {
-  "fmt": {
-    "semiColons": false,
-    "singleQuote": true
-  }
+  "tasks": {
+    "check": "deno fmt --check && deno lint"
+  },
+  "lock": false
 }
