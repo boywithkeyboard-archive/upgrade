@@ -24,13 +24,13 @@ export async function difference({
       if (!semver.valid(currentVersion)) {
         continue;
       }
-
       let nextVersion: string;
 
       try {
         nextVersion = cache.get(`${registry.name}:${moduleName}`) ??
-          await registry.fetchNextVersion(moduleName, url);
+          await registry.fetchNextVersion(moduleName, currentVersion);
       } catch (_) {
+        console.log(_);
         changes.push({
           moduleName,
           registryName: registry.name,
@@ -87,6 +87,5 @@ export async function difference({
       continue;
     }
   }
-  console.log(changes);
   return changes;
 }
