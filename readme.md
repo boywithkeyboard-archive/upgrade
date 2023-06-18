@@ -53,7 +53,7 @@ deno task upgrade
 
 ### Examples
 
-- Pin a dependency to a specific version by applying `#pin` at the end of the
+- Pin a dependency to a specific version by appending `#pin` at the end of the
   url.
 
   ```ts
