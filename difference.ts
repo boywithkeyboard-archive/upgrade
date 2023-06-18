@@ -6,7 +6,7 @@ export async function difference({
   allowBreaking,
   allowUnstable,
   directory = Deno.cwd(),
-  extensions = ["js", "jsx", "ts", "tsx", "json", "md"],
+  extensions = ["js", "jsx", "ts", "tsx", "json"],
 }: {
   allowBreaking?: boolean;
   allowUnstable?: boolean;
