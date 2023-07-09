@@ -1,3 +1,9 @@
+## [v1.0.1](https://github.com/azurystudio/upgrade/releases/tag/v1.0.1)
+
+- **Bug Fixes**
+
+  - Pre-releases are now correctly ignored.
+
 ## [v1.0.0](https://github.com/azurystudio/upgrade/releases/tag/v1.0.0)
 
 - **Breaking Changes**

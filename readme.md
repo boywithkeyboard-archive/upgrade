@@ -5,7 +5,7 @@
 1. #### Check for changes.
 
    ```ts
-   import { difference } from "https://deno.land/x/upgrade@v1.0.0/difference.ts";
+   import { difference } from "https://deno.land/x/upgrade@v1.0.1/difference.ts";
 
    const changes = await difference({
      directory: Deno.cwd(),
@@ -18,7 +18,7 @@
 2. #### Submit changes.
 
    ```ts
-   import { upgrade } from "https://deno.land/x/upgrade@v1.0.0/upgrade.ts";
+   import { upgrade } from "https://deno.land/x/upgrade@v1.0.1/upgrade.ts";
 
    await upgrade(changes);
    ```
@@ -32,7 +32,7 @@
 ```json
 {
   "tasks": {
-    "upgrade": "https://deno.land/x/upgrade@v1.0.0/mod.ts"
+    "upgrade": "https://deno.land/x/upgrade@v1.0.1/mod.ts"
   }
 }
 ```
