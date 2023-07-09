@@ -3,7 +3,7 @@ import {
   brightGreen,
   brightYellow,
   gray,
-} from "https://deno.land/std@0.192.0/fmt/colors.ts";
+} from "https://deno.land/std@0.193.0/fmt/colors.ts";
 import { Checkbox, colors, parseArgs } from "./deps.ts";
 import { difference } from "./difference.ts";
 import { upgrade } from "./upgrade.ts";
